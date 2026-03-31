@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Receipt App</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<style>
+body { margin:0; background:#f2f3f5; font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",sans-serif; }
+.container { display:flex; flex-wrap:wrap; }
+.form { width:320px; padding:15px; background:#fff; }
+.form input { width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd; }
+.btn { width:100%; padding:12px; border:none; border-radius:10px; background:#111; color:#fff; margin-bottom:10px; }
+.app { max-width:430px; width:100%; background:#fff; min-height:100vh; display:flex; flex-direction:column; }
+.topbar { height:56px; display:flex; align-items:center; justify-content:center; font-weight:600; border-bottom:1px solid #eee; }
+.content { padding:20px; flex:1; }
+.header { display:flex; justify-content:space-between; }
+.logo { font-size:36px; font-weight:800; color:#e53935; }
+.meta { font-size:12px; color:#8e8e93; text-align:right; }
+.title { font-size:18px; font-weight:600; margin:15px 0 20px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.label { font-size:12px; color:#8e8e93; }
+.value { font-size:14px; font-weight:500; }
+.divider { height:1px; background:#eee; margin:20px 0; }
+.status { border:1.5px solid #4a90e2; border-radius:10px; padding:12px; text-align:center; }
+.footer { padding:15px; }
+.footer .btn { margin:0; }
+.demo { text-align:center; font-size:11px; color:red; margin-top:10px; }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="form">
+<h3>Данные</h3>
+<input id="created" placeholder="Дата создания">
+<input id="amount" placeholder="Сумма">
+<input id="fee" placeholder="Комиссия">
+<input id="rate" placeholder="Курс">
+<input id="received" placeholder="Получено">
+<input id="date" placeholder="Дата перевода">
+<input id="name" placeholder="Получатель">
+<input id="phone" placeholder="Телефон">
+<input id="account" placeholder="Счет">
+<input id="operation" placeholder="Операция">
+<button class="btn" onclick="generate()">Обновить</button>
+<button class="btn" onclick="randomize()">Авто</button>
+<button class="btn" onclick="download()">Скачать PNG</button>
+</div>
+<div class="app" id="receipt">
+<div class="topbar">Квитанция</div>
+<div class="content">
+<div class="header">
+<div class="logo">A</div>
+<div class="meta" id="r_created">—</div>
+</div>
+<div class="title">Квитанция о переводе за рубеж по номеру телефона</div>
+<div class="grid">
+<div>
+<div class="label">Сумма перевода</div>
+<div class="value" id="r_amount">—</div>
+<div class="label">Комиссия</div>
+<div class="value" id="r_fee">—</div>
+<div class="label">Курс конвертации</div>
+<div class="value" id="r_rate">—</div>
+<div class="label">Сумма зачисления</div>
+<div class="value" id="r_received">—</div>
+<div class="label">Дата перевода</div>
+<div class="value" id="r_date">—</div>
+</div>
+<div>
+<div class="label">Получатель</div>
+<div class="value" id="r_name">—</div>
+<div class="label">Телефон</div>
+<div class="value" id="r_phone">—</div>
+<div class="label">Счёт списания</div>
+<div class="value" id="r_account">—</div>
+<div class="label">Номер операции</div>
+<div class="value" id="r_operation">—</div>
+</div>
+</div>
+<div class="divider"></div>
+<div class="status">ПЕРЕВОД ВЫПОЛНЕН</div>
+<div class="demo">DEMO / SAMPLE</div>
+</div>
+<div class="footer">
+<button class="btn" onclick="download()">Сохранить</button>
+</div>
+</div>
+</div>
+<script>
+function format(n){return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g," ");}
+function generate(){r_created.innerHTML="Сформирована<br>"+created.value;r_amount.innerText=format(amount.value)+" RUR";r_fee.innerText=fee.value+" RUR";r_rate.innerText=rate.value;r_received.innerText=received.value+" TJS";r_date.innerText=date.value;r_name.innerText=name.value;r_phone.innerText=phone.value;r_account.innerText=account.value;r_operation.innerText=operation.value;}
+function randomize(){created.value=new Date().toLocaleString();amount.value=Math.floor(Math.random()*5000)+500;fee.value=0;rate.value="1 RUR = 0.1134 TJS";received.value=Math.floor(Math.random()*200);date.value=new Date().toLocaleString();name.value="Иванов И.";phone.value="+7 999 "+rand(100,999);account.value="40817"+rand(100000000000,999999999999);operation.value="C"+rand(100000000,999999999);generate();}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+function download(){html2canvas(document.getElementById("receipt")).then(canvas=>{let link=document.createElement("a");link.download="receipt.png";link.href=canvas.toDataURL();link.click();});}
+</script>
+</body>
+</html>
